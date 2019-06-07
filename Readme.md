@@ -1,1 +1,1 @@
-Telegram bot to access Flibusta and other major storages books
+HTTP service which allows OPDS search functionality for Telegram bot.
