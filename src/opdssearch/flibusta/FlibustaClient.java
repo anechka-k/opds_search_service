@@ -10,20 +10,21 @@ import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
+import opdssearch.AppProperties;
 import opdssearch.opds.Entry;
+import opdssearch.opds.FileNameParser;
 import opdssearch.opds.Link;
 import opdssearch.opds.Page;
 
 public class FlibustaClient
-{  
-  private static final String rootOPDStor = "http://flibustahezeous3.onion";
-  private static final String rootOPDSDefault = rootOPDStor;
+{
   private static final String authorSearch = "/search?searchType=authors&searchTerm=%s";
   private static final String bookSearch = "/search?searchType=books&searchTerm=%s";
   
   public static JSONObject searchBooks(String searchQuery) throws JSONException
   {
     JSONObject result = new JSONObject();
+    
     String encodedSearch;
     try
     {
@@ -37,6 +38,10 @@ public class FlibustaClient
       return result;
     }
     
+    String flibustaHost = AppProperties.getStringProperty("flibustaHost");
+    result.put("site", flibustaHost);
+    result.put("library", "flibustaOPDS");
+    
     List<Entry> bookEntries = new ArrayList<Entry>();
     
     try
@@ -45,8 +50,8 @@ public class FlibustaClient
       List<Page> authorPages = new ArrayList<Page>();
       List<Page> allPages = new ArrayList<Page>();
       
-      bookPages = FlibustaCrawler.downloadBooksSearch(rootOPDSDefault, String.format(bookSearch, encodedSearch));
-      authorPages = FlibustaCrawler.downloadAuthorsSearch(rootOPDSDefault, String.format(authorSearch, encodedSearch));
+      bookPages = FlibustaCrawler.downloadBooksSearch(flibustaHost, String.format(bookSearch, encodedSearch));
+      authorPages = FlibustaCrawler.downloadAuthorsSearch(flibustaHost, String.format(authorSearch, encodedSearch));
       
       allPages = new ArrayList<Page>();
       allPages.addAll(bookPages);
@@ -75,12 +80,14 @@ public class FlibustaClient
       JSONArray links = new JSONArray();
       for(Link l : e.links)
       {
-        JSONObject link = new JSONObject();
-        link.put("title", l.title);
-        link.put("type", l.type);
-        link.put("href", l.href);
-        link.put("rel", l.rel);
+        if(!l.rel.toLowerCase().contains("open-access")) continue;
         
+        String[] fileparts = FileNameParser.parse(l.href, l.type);
+        
+        JSONObject link = new JSONObject();
+        link.put("href", l.href);
+        link.put("format", fileparts[1]);
+
         links.put(link);
       }
       

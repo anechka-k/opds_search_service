@@ -30,12 +30,19 @@ public class FileNameParser
     String[] parts = url.split("/");
     String[] typeParts = type.split("/");
     
-    if(!type.startsWith("application/"))
+    if(parts.length < 2)
     {
+      String[] fileparts = new String[2];
+      fileparts[0] = "unknown";
+      fileparts[1] = "unknown";
+      return fileparts;
+    }
+    
+    if(!type.startsWith("application/"))
+    {      
       String[] fileparts = new String[2];
       fileparts[0] = parts[parts.length - 2];
       fileparts[1] = parts[parts.length - 1];
-      
       return fileparts;
     }
     
@@ -46,10 +53,9 @@ public class FileNameParser
       
     if(typeMime.endsWith("+zip"))
     {
-      String[] fileparts = new String[3];
+      String[] fileparts = new String[2];
       fileparts[0] = parts[parts.length - 2];
-      fileparts[1] = typeMimeShort;
-      fileparts[2] = "zip";
+      fileparts[1] = typeMimeShort + ".zip";
       return fileparts;
     }
     
@@ -57,10 +63,9 @@ public class FileNameParser
     
     if(typeMime.endsWith("+rar"))
     {
-      String[] fileparts = new String[3];
+      String[] fileparts = new String[2];
       fileparts[0] = parts[parts.length - 2];
-      fileparts[1] = typeMimeShort;
-      fileparts[2] = "rar";
+      fileparts[1] = typeMimeShort + ".rar";
       return fileparts;
     }
       

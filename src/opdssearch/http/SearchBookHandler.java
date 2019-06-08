@@ -5,6 +5,9 @@ import javax.servlet.http.HttpServletRequest;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
+import opdssearch.flibusta.FlibustaClient;
+import opdssearch.util.Convert;
+
 public final class SearchBookHandler extends APIServlet.APIRequestHandler
 {
   static final SearchBookHandler instance = new SearchBookHandler();
@@ -15,11 +18,9 @@ public final class SearchBookHandler extends APIServlet.APIRequestHandler
 
   @Override
   JSONObject processRequest(HttpServletRequest req) throws JSONException
-  {
-    JSONObject answer = new JSONObject();
-
-    answer.put("result", "error");
-    answer.put("error", "not implemented");
-    return answer;
+  {    
+    String searchQuery = Convert.emptyToNull(req.getParameter("query"));
+    JSONObject books = FlibustaClient.searchBooks(searchQuery);
+    return books;
   }
 }
