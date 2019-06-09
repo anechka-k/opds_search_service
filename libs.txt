@@ -10,7 +10,6 @@ jetty-server-9.2.10.v20150310.jar
 jetty-servlet-9.2.10.v20150310.jar
 jetty-servlets-9.2.10.v20150310.jar
 jetty-util-9.2.10.v20150310.jar
-json-simple-1.1.1.jar
 servlet-api-3.1.jar
 slf4j-api-1.7.7.jar
 slf4j-jdk14-1.7.7.jar

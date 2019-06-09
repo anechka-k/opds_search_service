@@ -54,3 +54,4 @@ opds_search_service.properties
 *.log
 *.lck
 /flibooks/
+opds_search_service.jar
